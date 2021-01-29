@@ -1,12 +1,15 @@
 import ply.lex as lex
+from ply.lex import TOKEN
 import ply.yacc as yacc
  
  # List of token names.   This is always required
 
 
 tokens = (
-    '3ADAD',
+    
     'ZA2ID',
+    '3ADAD',
+    'MOTAGHAYIR',
     'NA9IS',
     'DERB',
     '9ISSMA',
@@ -23,7 +26,8 @@ reserved = {
     'wla' : 'WLA',
     'baynama' : 'BAYNAMA',
     'minajl':'MINAJL',
-    'motaghayir':'MOTAGHAYIR',
+    
+    
     'kteb':'KTEB',
     'scan':'SCAN',
     'w':'W',
@@ -43,15 +47,7 @@ t_9AWSLISSER  = r'\('
 t_9AWSLIMEN  = r'\)'
 t_TOSSAWI =r'=='
 t_AFFECT =r'='
-'''
-t_IDA = r'ida'
-t_ALORS=r'alors'
-t_WLA=r'wla'
-t_BAYNAMA=r'baynama'
-t_MINAJL=r'minajl'
-t_KTEB= r'kteb'
-t_SCAN=r'scan'
-'''
+
 
 
 def t_MA39OFALISSER(t):
@@ -65,13 +61,14 @@ def t_MA39OFALIMN(t):
      return t
 
  # A regular expression rule with some action code
+
 def t_3ADAD(t):
      r'\d+'
      t.value = int(t.value)    
      return t
 
 def t_MOTAGHAYIR(t):
-     r'[a-zA-Z_][a-zA-Z_0-9]*'
+     r'[a-zA-Z][a-zA-Z_0-9]*'
      t.type = reserved.get(t.value,'MOTAGHAYIR')    # Check for reserved words
      return t
  
@@ -98,12 +95,21 @@ def t_error(t):
      print("Illegal character '%s'" % t.value[0])
      t.lexer.skip(1)
 
+ # EOF handling rule
+def t_eof(t):
+     # Get more input (Example)
+     
+     more = input("....   ")
+     if more:
+         lexer.input(more)
+         return lexer.token()
+     return None
 def t_COMMENT(t):
      r'(\//|\#).*'
      pass
      # No return value. Token discarded
 # Build the lexer
-lexer = lex.lex()
+lexer = lex.lex(debug=1)
 
 # Build the Parser
 
@@ -112,8 +118,8 @@ lexer = lex.lex()
 
  # Give the lexer some input
 while True:
- print('DARIJA >')   
- data=input()
+    
+ data=input(" compiler >")
  lexer.input(data)
  
  # Tokenize
